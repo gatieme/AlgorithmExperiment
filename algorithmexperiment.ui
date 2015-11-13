@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AlgorithmExperiment</class>
+ <widget class="QWidget" name="AlgorithmExperiment">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string> 算法设计与分析实验</string>
+  </property>
+  <widget class="QwtPlot" name="qwtPlotAlgExp">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>371</width>
+     <height>191</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBoxAlgExp">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>17</y>
+     <width>181</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>凸包问题--ConbexHull</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>哈密顿环--Hamiltonian</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="labelAlgExp">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>201</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>15S003005 成坚 Gatieme</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
