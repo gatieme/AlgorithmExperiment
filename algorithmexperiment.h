@@ -12,7 +12,7 @@ class AlgorithmExperiment;
 
 
 //  ConvexHull Data
-#define CONVEX_BRUTEFORCE_FILE  "./ConvexHull/BruteForeOutput.txt"
+#define CONVEX_BRUTEFORCE_FILE  "./ConvexHull/BruteForceOutput.txt"
 #define CONVEX_GRAHAMSCAN_FILE  "./ConvexHull/GrahamOutput.txt"
 #define CONVEX_DIVIDE_FILE "./ConvexHull/DivideOutput.txt"
 
