@@ -7,6 +7,57 @@ AlgorithmExperiment::AlgorithmExperiment(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+    // 设置画布背景
+    this->ui->qwtPlotAlgExp->setCanvasBackground(QColor(29, 100, 141)); // nice blue
+
+    // 增加网格
+    this->m_grid = new QwtPlotGrid();
+    this->m_grid->attach( this->ui->qwtPlotAlgExp);
+
+
+    ////////////////////////////
+    ///  设置凸包的图层
+    ////////////////////////////
+    // 凸包暴力曲线  颜色红色
+    this->m_curveConvexBrute=new QwtPlotCurve("暴力法");
+    //this->m_penConvexBrute.setColor(QColor(255,0,0));
+    //this->m_curveConvexBrute->setPen(this->m_penConvexBrute);
+    this->m_curveConvexBrute->setRenderHint(QwtPlotItem::RenderAntialiased,true);      //抗锯齿
+    this->m_curveConvexBrute->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+
+    //  GrahamScan扫描算法曲线  颜色蓝色
+    this->m_curveConvexScan=new QwtPlotCurve("扫描法");
+    //this->m_penConvexScan.setColor(QColor(0,255,0));
+    //this->m_curveConvexScan->setPen(this->m_penConvexScan);
+    this->m_curveConvexScan->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
+    this->m_curveConvexScan->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+
+
+    this->m_curveConvexDivide =new QwtPlotCurve("分治法");
+    //this->m_penConvexDivide.setColor(QColor(0,255,0));
+    //this->m_curveConvexDivide->setPen(this->m_penConvexDivide);
+    this->m_curveConvexDivide->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
+    this->m_curveConvexDivide->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+
+    //    this->m_marker = new QwtPlotMarker();
+//    this->m_marker->setRenderHint( QwtPlotItem::RenderAntialiased, false );
+//    this->m_marker->setItemAttribute( QwtPlotItem::Legend, false );
+//    this->m_marker->setSymbol( new QwtSymbol( ) );
+//    this->m_marker->setValue( QPointF(0, 0));
+//    this->m_marker->setLabel(QString("暴力法"));
+//    this->m_marker->setLabelAlignment( Qt::AlignRight | Qt::AlignBottom );
+//    this->m_marker = this->m_locateMarkerList.FindMarker(&uNode->m_user);
+//    this->m_marker->setValue( QPointF(position->m_tdistance, position->m_zdistance));
+//    this->m_marker->attach(  this->ui->plotLocate );
+
+
+   // panning with the left mouse button支持鼠标平移
+   ( void ) new QwtPlotPanner( this->ui->qwtPlotAlgExp->canvas() );
+   // zoom in/out with the wheel支持滚轮放大缩小
+   ( void ) new QwtPlotMagnifier( this->ui->qwtPlotAlgExp->canvas() );
+
+
     this->connect(this->ui->comboBoxAlgExp, SIGNAL(currentIndexChanged(int)), this, SLOT(slotShowQwtPlot(int)));
 }
 
@@ -33,109 +84,217 @@ void AlgorithmExperiment::slotShowQwtPlot(int index)
 
 }
 
-// 显示定位信息
-void AlgorithmExperiment::slotShowConvexHullPlot( )                // 显示定位信息
+
+void AlgorithmExperiment::slotShowConvexHullPlot( )
+{
+    this->slotShowBruteConvexHullPlot();        // 暴力法曲线
+    this->slotShowScanConvexHullPlot();
+    this->slotShowDivideConvexHullPlot();
+
+    this->ui->qwtPlotAlgExp->replot();
+}
+
+
+
+void AlgorithmExperiment::slotShowBruteConvexHullPlot( )
 {
     qDebug( ) <<"凸包问题--ConbexHull" <<endl;
     QVector<double> xData;
-    double  minxData = 1000, maxxData = 0;
+    double  minxData =100000000 , maxxData = 0;
     QVector<double> yData;
-    double minyData = 1000, maxyData = 0;
-    double datasize, timeuse;
+    double minyData = 100000000, maxyData = 0;
+    int datasize, timeuse, count;
     xData <<0;
     yData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
 
     QFile file(CONVEX_BRUTEFORCE_FILE);
-    if (file.open(QIODevice::ReadOnly) !=false)
+    if (file.open(QIODevice::ReadOnly) ==false)
     {
         qDebug() <<"打开文件失败" <<CONVEX_BRUTEFORCE_FILE <<endl;
+        return ;
     }
     qDebug() <<"打开文件成功" <<CONVEX_BRUTEFORCE_FILE <<endl;
     QTextStream in(&file);
-    while(in.eof() != true)
+    qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
     {
+        //qDebug() <<"读取信息" <<endl;
         in >>datasize >>timeuse;
-        qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        //qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
         xData <<datasize;
         yData <<timeuse;
+        count++;
+
+
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
+
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
     }
-    qDebug() <<"..." <<endl;
-    /*this->m_locateLocalMarker->attach(  this->ui->plotLocate );
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
 
-
-   for(int cnt = 0; cnt < count; cnt++)
-   {
-       position = &uNode->m_position;
-       xData <<position->m_xdistance;          // 将经度写入X轴
-       yData <<position->m_ydistance;             // 将维度写入Y轴
-
-       marker = this->m_locateMarkerList.FindMarker(&uNode->m_user);
-       marker->setValue( QPointF(position->m_xdistance, position->m_ydistance));
-       marker->attach(  this->ui->plotLocate );
-
-       if(position->m_xdistance < minxData)
-       {
-           minxData = position->m_xdistance;
-       }
-       if(position->m_xdistance > maxxData)
-       {
-           maxxData = position->m_xdistance;
-       }
-
-       if(position->m_ydistance < minyData)
-       {
-           minyData = position->m_ydistance;
-       }
-       if(position->m_ydistance > maxyData)
-       {
-           maxyData = position->m_ydistance;
-       }
-
-       uNode = uNode->m_next;
-   }
-   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"~~" <<maxxData <<endl;
-   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"~~" <<maxyData <<endl;
    // 设置坐标轴
-   this->ui->plotLocate->setAxisTitle(QwtPlot::xBottom, "East" );
-   this->ui->plotLocate->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
 
-   this->ui->plotLocate->setAxisTitle(QwtPlot::yLeft, "North" );
-   this->ui->plotLocate->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
+    this->m_curveConvexBrute->setSamples(xData, yData);
+    this->m_curveConvexBrute->attach( this->ui->qwtPlotAlgExp);
+    this->m_curveConvexBrute->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
 
-   // 增加网格
-   //QwtPlotGrid *grid = new QwtPlotGrid;
-   this->m_locateGrid->attach( this->ui->plotLocate);
+    this->m_curveConvexBrute->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveConvexBrute->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::red ), QSize(3, 3 ) ) );
 
-   // 设置画布背景
-   this->ui->plotLocate->setCanvasBackground(QColor(29, 100, 141)); // nice blue
+}
+
+void AlgorithmExperiment::slotShowScanConvexHullPlot()
+{
+    qDebug( ) <<"凸包问题--扫描算法ConbexHull" <<endl;
+    QVector<double> xScanData;
+    double  minxData = 100000000, maxxData = 0;
+    QVector<double> yScanData;
+    double minyData = 100000000, maxyData = 0;
+    long datasize, timeuse, count;
+    xScanData <<0;
+    yScanData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
+
+    QFile file(CONVEX_GRAHAMSCAN_FILE);
+    if (file.open(QIODevice::ReadOnly) ==false)
+    {
+        qDebug() <<"打开文件失败" <<CONVEX_GRAHAMSCAN_FILE <<endl;
+        return ;
+    }
+    qDebug() <<"打开文件成功" <<CONVEX_GRAHAMSCAN_FILE <<endl;
+    QTextStream in(&file);
+    //qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
+    {
+        //qDebug() <<"读取信息" <<endl;
+        in >>datasize >>timeuse;
+        //qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        xScanData <<datasize;
+        yScanData <<timeuse;
+        count++;
 
 
-   //新建一个曲线对象
-   //tPlotCurve *pCurve=new QwtPlotCurve("route");
-    this->m_locateCurve->setSamples(xData, yData);
-    this->m_locateCurve->attach( this->ui->plotLocate);
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
 
-    this->m_locateCurve->setStyle( QwtPlotCurve::NoCurve );
-    this->m_locateCurve->setSymbol( new QwtSymbol( QwtSymbol::XCross,
-       Qt::NoBrush, QPen( Qt::red ), QSize(5, 5 ) ) );
-    //设置曲线颜色
-    QPen pen;
-    pen.setColor(QColor(255,0,0));
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
+    }
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
 
-     this->m_locateCurve->setPen(pen);
+   // 设置坐标轴
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
 
-   //QwtPlotCurve::PaintAttribute
+    this->m_curveConvexScan->setSamples(xScanData, yScanData);
+    this->m_curveConvexScan->attach( this->ui->qwtPlotAlgExp);
 
-   //抗锯齿
-   this->m_locateCurve->setRenderHint(QwtPlotItem::RenderAntialiased,true);
+   this->m_curveConvexScan->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveConvexScan->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::blue ), QSize(1, 1) ) );
 
-   // panning with the left mouse button支持鼠标平移
-   ( void ) new QwtPlotPanner( this->ui->plotLocate->canvas() );
+}
 
-   // zoom in/out with the wheel支持滚轮放大缩小
-   ( void ) new QwtPlotMagnifier( this->ui->plotLocate->canvas() );
 
-   //重绘
-  this->ui->plotLocate->replot();*/
+void AlgorithmExperiment::slotShowDivideConvexHullPlot()
+{
+    qDebug( ) <<"凸包问题--分治算法ConbexHull" <<endl;
+    QVector<double> xDivideData;
+    double  minxData = 100000000, maxxData = 0;
+    QVector<double> yDivideData;
+    double minyData = 100000000, maxyData = 0;
+    int datasize, timeuse, count;
+    xDivideData <<0;
+    yDivideData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
+
+    QFile file(CONVEX_DIVIDE_FILE);
+    if (file.open(QIODevice::ReadOnly) ==false)
+    {
+        qDebug() <<"打开文件失败" <<CONVEX_DIVIDE_FILE <<endl;
+        return ;
+    }
+    qDebug() <<"打开文件成功" <<CONVEX_DIVIDE_FILE <<endl;
+    QTextStream in(&file);
+    //qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
+    {
+        //qDebug() <<"读取信息" <<endl;
+        in >>datasize >>timeuse;
+        qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        xDivideData <<datasize;
+        yDivideData <<timeuse;
+        count++;
+
+
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
+
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
+    }
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
+
+   // 设置坐标轴
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
+
+    this->m_curveConvexDivide->setSamples(xDivideData, yDivideData);
+    this->m_curveConvexDivide->attach( this->ui->qwtPlotAlgExp);
+
+    this->m_curveConvexDivide->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveConvexDivide->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::black ), QSize(1, 1) ) );
 }
 

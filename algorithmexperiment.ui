@@ -13,49 +13,36 @@
   <property name="windowTitle">
    <string> 算法设计与分析实验</string>
   </property>
-  <widget class="QwtPlot" name="qwtPlotAlgExp">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>70</y>
-     <width>371</width>
-     <height>191</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBoxAlgExp">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>17</y>
-     <width>181</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>凸包问题--ConbexHull</string>
-    </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelAlgExp">
+       <property name="text">
+        <string>15S003005 成坚 Gatieme</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBoxAlgExp">
+       <item>
+        <property name="text">
+         <string>凸包问题--ConbexHull</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>哈密顿环--Hamiltonian</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QwtPlot" name="qwtPlotAlgExp"/>
+     </item>
+    </layout>
    </item>
-   <item>
-    <property name="text">
-     <string>哈密顿环--Hamiltonian</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="labelAlgExp">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>201</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>15S003005 成坚 Gatieme</string>
-   </property>
-  </widget>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
