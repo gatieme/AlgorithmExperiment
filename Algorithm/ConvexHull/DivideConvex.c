@@ -39,7 +39,7 @@ void AddPosition(Point *point,Point *convex,int i);
 void DealWithLeft(int first,int final,Point *point,Point *convex);
 void DivideConvexHull(Point *point,Point *convex);
 
-int PrintPoints(Point *convex, int length);
+void PrintPoints(Point *convex, int length);
 
 int N;
 Point point[MAX_SIZE];
@@ -51,8 +51,8 @@ int convexCount=0;	//convex[15]里面插入值的个数
 int main(void)
 {
 #ifdef TIME
-    FILE *ifp = freopen("input.txt", "r", stdin);
-    FILE *ofp = freopen("divideoutput.txt", "w", stdout);
+    /*FILE *ifp = */freopen("input.txt", "r", stdin);
+    /*FILE *ofp = */freopen("DivideOutput.txt", "w", stdout);
 #endif // TIME
 
 
@@ -88,8 +88,7 @@ int main(void)
         gettimeofday( &end, NULL );
         int timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
         //printf("N : %5d, time: %dus\n", N, timeuse);
-        printf("%5d,%20d\n", N, timeuse);
-
+        printf("%5d%20d\n", N, timeuse);
 
         //cl = ((double)end.tv_sec + (double)end.tv_usec / 1000000) - cl;
         //printf("execution time : %0.3fs\n", cl);
@@ -173,7 +172,7 @@ void DealWithLeft(int first, int final, Point *point, Point *convex)
 	int i = first;
 	if(first < final)  //point[first]->point[final]射线左侧
 	{
-		for(i ; i < final; i++)
+		for(; i < final; i++)
 		{
 			int x1 = point[first].x,y1 = point[first].y;
 			int x2 = point[final].x,y2 = point[final].y;
@@ -191,7 +190,7 @@ void DealWithLeft(int first, int final, Point *point, Point *convex)
 	}
 	else
 	{
-		for(i; i >= 0; i--)//point[final]->point[first]射线左侧
+		for(; i >= 0; i--)//point[final]->point[first]射线左侧
 		{
 			int x1 = point[first].x,y1 = point[first].y;
 			int x2 = point[final].x,y2 = point[final].y;
@@ -224,7 +223,7 @@ void DivideConvexHull(Point *point,Point *convex)
 }
 
 
-int PrintPoints(Point *convex, int length)
+void PrintPoints(Point *convex, int length)
 {
     for(int i = 0; i < length; i++)
     {

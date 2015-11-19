@@ -41,7 +41,7 @@ double Multiply(Point p1, Point p2, Point p0);
 double Distance(Point p1,Point p2); //p1,p2的距离
 
 // GrahamScan求凸包
-int BruteForce(int n);
+void BruteForce(int n);
 
 // 比较两个点的坐标
 int Cmp(const void *left, const void *right);
@@ -66,11 +66,11 @@ int top = 0;                    //  [0~top)存储了位置节点信息
 int main()
 {
     int i;
-    int N, length;
+    int N/*, length*/;
 
 #ifdef TIME
-    FILE *ifp = freopen("input.txt", "r", stdin);
-    FILE *ofp = freopen("bruteforceoutput.txt", "w", stdout);
+    /*FILE *ifp = */freopen("input.txt", "r", stdin);
+    /*FILE *ofp = */freopen("bruteforceoutput.txt", "w", stdout);
 #endif // TIME
 
     ///
@@ -91,7 +91,7 @@ int main()
         gettimeofday( &end, NULL );
         int timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
         //printf("N : %5d, time: %dus\n", N, timeuse);
-        printf("%5d,%20d\n", N, timeuse);
+        printf("%5d%20d\n", N, timeuse);
 
         //cl = ((double)end.tv_sec + (double)end.tv_usec / 1000000) - cl;
         //printf("execution time : %0.3fs\n", cl);
@@ -134,7 +134,7 @@ void InsertPoint(int pos)
 //  对于N个点构成的机集合中任意选择两个点Pi和Pj，
 //  当且仅当该集合的其他点都位于穿过这两点的直线的同一边时
 //  他们的连线是该集合凸包边界的一部分
-int BruteForce(int n)
+void BruteForce(int n)
 {
     int i, j, k;                            //  枚举变量
     int a, b, c;                            //  直线方程
@@ -181,8 +181,9 @@ int BruteForce(int n)
             }
         }
     }
-
 }
+
+
 
 //求凸包的面积
 double PolygonArea(Point p[], int n)

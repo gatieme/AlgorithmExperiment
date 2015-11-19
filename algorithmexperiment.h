@@ -30,9 +30,9 @@ class AlgorithmExperiment;
 
 
 //  ConvexHull Data
-#define CONVEX_BRUTEFORCE_FILE  "./ConvexHull/BruteForceOutput.txt"
-#define CONVEX_GRAHAMSCAN_FILE  "./ConvexHull/GrahamScanOutput.txt"
-#define CONVEX_DIVIDE_FILE "./ConvexHull/DivideOutput.txt"
+#define CONVEX_BRUTEFORCE_FILE  "./Algorithm/ConvexHull/BruteForceOutput.txt"
+#define CONVEX_GRAHAMSCAN_FILE  "./Algorithm/ConvexHull/GrahamScanOutput.txt"
+#define CONVEX_DIVIDE_FILE "./Algorithm/ConvexHull/DivideOutput.txt"
 
 
 class AlgorithmExperiment : public QWidget
