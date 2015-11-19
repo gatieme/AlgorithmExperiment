@@ -45,17 +45,23 @@ public:
 
 
 private slots:
+
+    //  Convex
     void slotShowConvexHullPlot();      //
     void slotShowBruteConvexHullPlot();
     void slotShowScanConvexHullPlot();
     void slotShowDivideConvexHullPlot();
 
+    //  Hamiltonian
+    void slotShowHamiltonianPlot();
+    // all plot
     void slotShowQwtPlot(int index);
 
 private:
     Ui::AlgorithmExperiment *ui;
 
     QwtPlotGrid *m_grid;            //  网格
+    QwtLegend *m_legend;
 
 //    QwtPlotMarker  *m_marker;
     //  暴力求解凸包

@@ -95,7 +95,7 @@ int main()
         gettimeofday( &end, NULL );
         int timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
         //printf("N : %5d, time: %dus\n", N, timeuse);
-        printf("%5d%20d\n", N, timeuse);
+        printf("%5d,%20d\n", N, timeuse);
 
 #endif // TIME
 
