@@ -2,11 +2,16 @@ ROOT=..
 PLATFORM=$(shell $(ROOT)/systype.sh)
 include $(ROOT)/Make.defines.$(PLATFORM)
 
-target=BruteForce GrahamScan DivideConvex
+target= random BruteForce GrahamScan DivideConvex
 
 
 
 all:$(target)
+
+
+random : random.o
+	$(CC) $^ -o $@ $(LDFLAGS)
+	echo "编译输入文件"
 
 BruteForce : BruteForce.o
 	$(CC) $^ -o $@ $(LDFLAGS)

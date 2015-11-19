@@ -45,7 +45,7 @@ int N;
 Point point[MAX_SIZE];
 Point convex[MAX_SIZE];
 int position[MAX_SIZE];
-int convexCount=0;	//convex[15]里面插入值的个数
+int convexCount=0;	//convex里面插入值的个数
 
 
 int main(void)
@@ -154,8 +154,8 @@ void AddHeadTail(Point *point, Point *convex)
 	convex[convexCount].x=point[0].x;
 	convex[convexCount++].y=point[0].y;
 
-	convex[convexCount].x=point[14].x;
-	convex[convexCount++].y=point[14].y;
+	convex[convexCount].x=point[N - 1].x;
+	convex[convexCount++].y=point[N - 1].y;
 }
 
 //向convex数组里面添加 point[i]
@@ -218,8 +218,8 @@ void DivideConvexHull(Point *point,Point *convex)
 {
 	AddHeadTail(point,convex);	//将首尾两个点并入convex[15]
 
-	DealWithLeft(0,N - 1,point,convex);	//处理point[0]->point[14]射线左边的点
-	DealWithLeft(N - 1,0,point,convex);	//处理point[14]->point[0]射线右边的点
+	DealWithLeft(0,N - 1,point,convex);	//处理point[0]->point[N - 1]射线左边的点
+	DealWithLeft(N - 1,0,point,convex);	//处理point[N - 1]->point[0]射线右边的点
 }
 
 
