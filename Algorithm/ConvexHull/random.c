@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    FILE *fp = freopen("input.txt", "w", stdout);
+    /*FILE *fp = */freopen("input.txt", "w", stdout);
 
     srand(time(NULL));
     for(int i = 5; i < 10000; i += 5)

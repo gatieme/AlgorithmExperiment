@@ -68,39 +68,60 @@ int main()
     int i;
     int N/*, length*/;
 
-#ifdef TIME
+#ifdef RELEASE
     /*FILE *ifp = */freopen("input.txt", "r", stdin);
     /*FILE *ofp = */freopen("bruteforceoutput.txt", "w", stdout);
-#endif // TIME
+#endif // RELEASE
+
+#ifdef DEBUG
+    /*FILE *ifp = */freopen("in.txt", "r", stdin);
+    ///*FILE *ofp = */freopen("bruteforceoutput.txt", "w", stdout);
+#endif // DEBUG
 
     ///
     while(scanf("%d", &N) != EOF)           ///  输入顶点个数
     {
-
+#ifdef DEBUG
+        printf("=================START=================\n");
+        printf("There are %d input points\n", N);
+#endif // DEBUG
         for(i = 0; i < N; i++)
-        scanf("%d%d", &(point[i].x), &(point[i].y));
-
-#ifdef TIME
+        {
+            scanf("%d%d", &(point[i].x), &(point[i].y));
+#ifdef DEBUG
+            printf("x = %d, y = %d\n", point[i].x, point[i].y);
+#endif // DEBUG
+        }
+//ifdef TIME
         struct timeval start, end;
         gettimeofday( &start, NULL );
         //double cl = (double)start.tv_sec + (double)start.tv_usec / 1000000;
 
-#endif // TIME
+//#endif // TIME
+
         BruteForce(N);
-#ifdef TIME
+
+//#ifdef TIME
         gettimeofday( &end, NULL );
         int timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
-        //printf("N : %5d, time: %dus\n", N, timeuse);
-        printf("%5d%20d\n", N, timeuse);
+#ifdef DEBUG
+        printf("\nN = %5d, usetime = %20dus\n\n", N, timeuse);
+#endif
+#ifdef RELEASE
+        printf("%5d%10d\n", N, timeuse);
+#endif
 
-        //cl = ((double)end.tv_sec + (double)end.tv_usec / 1000000) - cl;
-        //printf("execution time : %0.3fs\n", cl);
 
-#endif // TIME
-        //PrintPloygon(point, top);
+//#endif // TIME
 
-        //printf("%lf\n", PolygonArea(point, top));
-        //printf("%lf\n", PolygonCircumference(point, top));
+#ifdef DEBUG
+        printf("There are %d points in ConvexHull\n", top);
+        PrintPloygon(point, top);
+
+        printf("Area = %lf\n", PolygonArea(point, top));
+        printf("Ference = %lf\n", PolygonCircumference(point, top));
+        printf("==================END==================\n\n\n");
+#endif
     }
 
     return EXIT_SUCCESS;

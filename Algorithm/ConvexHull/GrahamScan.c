@@ -70,34 +70,54 @@ int main()
 {
     int i;
     int N/*, length*/;
-#ifdef TIME
+#ifdef DEBUG
+    /*FILE *ifp = */freopen("in.txt", "r", stdin);
+    ///*FILE *ofp = */freopen("GrahamScanOutput.txt", "w", stdout);
+#endif // DEBUG
+
+#ifdef RELEASE
     /*FILE *ifp = */freopen("input.txt", "r", stdin);
     /*FILE *ofp = */freopen("GrahamScanOutput.txt", "w", stdout);
-#endif // TIME
+#endif // RELEASE
 
     while(scanf("%d", &N) != EOF)           ///  输入顶点个数
     {
+#ifdef DEBUG
+        printf("=================START=================\n");
+        printf("There are %d input points\n", N);
+#endif // DEBUG
 
         for(i = 0; i < N; i++)
-        scanf("%d%d", &(point[i].x), &(point[i].y));
+        {
+            scanf("%d%d", &(point[i].x), &(point[i].y));
+#ifdef DEBUG
+            printf("x = %d, y= %d\n", point[i].x, point[i].y);
+#endif // DEBUG
+        }
 
-
-#ifdef TIME
+//#ifdef TIME
         struct timeval start, end;
         gettimeofday( &start, NULL );
 
-#endif // TIME
+//#endif // TIME
 /////////////////////////////////////////////////////////////////////
         GrahamScan(N);
 ///////////////////////////////////////////////////////////////////////
 
-#ifdef TIME
+//#ifdef TIME
         gettimeofday( &end, NULL );
         int timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
         //printf("N : %5d, time: %dus\n", N, timeuse);
-        printf("%5d%20d\n", N, timeuse);
 
-#endif // TIME
+#ifdef DEBUG
+        printf("N= %5d, timeuse = %10dus\n", N, timeuse);
+#endif
+
+#ifdef RELEASE
+        printf("%5d%20d\n", N, timeuse);
+#endif
+
+//#endif // TIME
 
 #ifdef DEBUG
 
@@ -105,6 +125,8 @@ int main()
 
         printf("%lf\n", PolygonArea(point, top + 1));
         printf("%lf\n", PolygonCircumference(point, top + 1));  // zoj 1453
+        printf("==================END==================\n\n\n");
+
 #endif // DEBUG
     }
 

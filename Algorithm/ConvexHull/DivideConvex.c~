@@ -109,7 +109,7 @@ int main(void)
 #ifdef DEBUG
         printf("There are %d points in ConvexHull\n", convexCount);
         PrintPoints(convex, convexCount);
-        printf("==================END==================\n\n\n");
+        printf("==================END==================\n");
 #endif // DEBUG
     }
 	return EXIT_SUCCESS;
