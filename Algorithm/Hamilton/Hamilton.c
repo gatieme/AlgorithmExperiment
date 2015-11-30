@@ -9,7 +9,7 @@
 #define INF 1000000000
 
 int N, M;
-bool graph[MAX_SIZE][MAX_SIZE];
+int graph[MAX_SIZE][MAX_SIZE];
 int hami[MAX_SIZE];            //记录回路中的第i个点
 bool flag[MAX_SIZE];
 
@@ -21,6 +21,11 @@ void Hamilton();
 void PrintHamilton();
 //  打印图的信息
 void PrintGraph();
+//  输入图的信息
+void ScanGraph();
+
+
+
 int main()
 {
 #ifdef DEBUG
@@ -29,24 +34,17 @@ int main()
 
 #ifdef RELEASE
     freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("hamiltonoutput.txt", "w", stdout);
 #endif
 
-    while(scanf("%d%d", &N, &M) != EOF)
+    while(scanf("%d", &N) != EOF)
     {
         memset(graph, 0, sizeof(graph));
         memset(flag, 0, sizeof(flag));
         memset(hami, 0, sizeof(hami));
 
-        for(int i = 0; i < M; i++)
-        {
-            int a, b;
+        ScanGraph();
 
-            scanf("%d%d",&a,&b);
-            a--;
-            b--;
-            graph[a][b] = graph[b][a] = true;
-        }
 #ifdef DEBUG
         printf("=================START=================\n");
 	    PrintGraph();
@@ -191,3 +189,28 @@ void PrintGraph(/*int (*graph)[MAX_SIZE], int n*/)
 	}
 }
 
+
+
+//  输入图的信息
+void ScanGraph()
+{
+#ifdef SCAN_VERTEX  //  输入边的信息
+    scanf("%d", &M);
+    for(int i = 0; i < M; i++)
+    {
+       int a, b;
+        scanf("%d%d",&a,&b);
+        a--;
+        b--;
+        graph[a][b] = graph[b][a] = true;
+    }
+#endif // SCAN_VERTEX
+
+    for(int i = 0 ; i < N; i++)
+    {
+        for(int j = 0; j < N; j++)
+        {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+}

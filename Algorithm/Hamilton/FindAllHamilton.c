@@ -11,7 +11,7 @@
     #include <windows.h>
 #endif
 
-
+//#define RELEASE
 //#define DEBUG           //  调试输出信息
 
 #define MAX_SIZE 10001
@@ -20,7 +20,8 @@ int N, M;
 int visited[MAX_SIZE];
 
 int graph[MAX_SIZE][MAX_SIZE],hami[MAX_SIZE];
-int s;//
+
+int s;                    //
 
 int counter = 1;
 
@@ -34,6 +35,9 @@ bool HamiltonProcess(int graph[][N + 1],int k, int hami[]);
 //  搜索所有可能的哈密顿环路
 void Hamilton(int graph[][MAX_SIZE],int hami[]);
 
+
+// 输入图的信息
+void ScanGraph(int (*graph)[MAX_SIZE]);
 // 输出图的信息
 void PrintGraph(int (*graph)[MAX_SIZE]);
 
@@ -42,23 +46,21 @@ int main()
 #ifdef DEBUG
 	freopen("in.txt", "r", stdin);
 #endif
+
 #ifdef RELEASE
 	freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("allhamiltonoutput.txt", "w", stdout);
 #endif
-    int a,b;
 
-    while(scanf("%d%d", &N, &M) != EOF) //  顶点数目N, 边数目M
+    while(scanf("%d", &N) != EOF) //  顶点数目N, 边数目M
     {
-	printf("=================START=================\n");
-	memset(graph, 0, MAX_SIZE);
+#ifdef DEBUG
+    printf("=================START=================\n");
+#endif
+        memset(graph, 0, MAX_SIZE);
         counter = 1;
-        for(int i = 1; i <= M; i++)     //  循环输入M条边
-        {
-            scanf("%d%d", &a, &b);
-			graph[a][b] = 1;
-            graph[b][a] = 1;
-        }
+
+        ScanGraph(graph);
 #ifdef DEBUG
         PrintGraph(graph);
 #endif
@@ -81,6 +83,7 @@ int main()
         printf("\nN = %5d, usetime = %10dus\n\n", N, timeuse);
         printf("==================END==================\n\n\n");
 #endif
+
 #ifdef RELEASE
         printf("%5d%10d\n", N, timeuse);
 #endif
@@ -133,7 +136,7 @@ bool HamiltonProcess(int (*graph)[MAX_SIZE],int k, int hami[])
             //  没发现一个可能的顶点K,存入hami[k]中,
             //  然后接着递归查找下一个顶点K+1,
             HamiltonProcess(graph, k + 1, hami);        //  递归的进行下一个顶点
-
+#ifdef DEBUG
             if(k == N)
             {
 				printf("Case %2d:  ", counter++);
@@ -151,7 +154,7 @@ bool HamiltonProcess(int (*graph)[MAX_SIZE],int k, int hami[])
                 }
      			//printf("=> %d\n", hami[1]);
      		}
-
+#endif
             ////////////////////////////////////////////////////////////////////
             ///  BUG -=> importmant
             ///  递归跳出后, 应该清除标志信息 否则的话, 下次查找无法正常进行
@@ -172,10 +175,34 @@ void Hamilton(int graph[][MAX_SIZE],int hami[])
         }
 
         hami[1] = start;                   //  起始的位置为S
-        visited[hami[1]] = true;              //  先访问起始的顶点
-        printf("\nStart from point %d\n", hami[1]);
 
+        visited[hami[1]] = true;              //  先访问起始的顶点
+
+#ifdef DEBUG
+        printf("\nStart from point %d\n", hami[1]);
+#endif
+        //  进行深度优先搜索
         HamiltonProcess(graph, 2, hami);
+    }
+}
+
+void ScanGraph(int (*graph)[MAX_SIZE])
+{
+    /*
+    for(int i = 1; i <= M; i++)     //  循环输入M条边
+    {
+       scanf("%d%d", &a, &b);
+			graph[a][b] = 1;
+            graph[b][a] = 1;
+    }
+    */
+
+    for(int i = 1; i <= N; i++)
+    {
+        for(int j = 1; j <= N; j++)
+        {
+            scanf("%d", &graph[i][j]);
+        }
     }
 }
 
