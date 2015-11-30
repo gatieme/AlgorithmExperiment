@@ -90,7 +90,7 @@ int main()
     }
 
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
@@ -207,17 +207,42 @@ void PrintGraph(int (*graph)[MAX_SIZE])
 {
 
 	printf("\nThere are %d points and %d vertexs\n", N, M);
-	for(int i = 1; i <= N; i++)
+	for(int row = 1; row <= N; row++)
 	{
-		for(int j = 1; j <= N; j++)
+		for(int col = 1; col <= N; col++)
 		{
 #if 0                               //  也可以使用输入矩阵的方式输入图的信息
             scanf("%d", &a);
             graph[i][j] = a;
 #endif
-			printf("%3d", graph[i][j]);
+			printf("%3d", graph[row][col]);
 		}
 		printf("\n");
 	}
     printf("\nThe all hamilton of the garph\n");
+}
+
+//  对图的邻接矩阵进行预处理
+//  首先 每行减去一个最小值
+//  要保证每行（已经保证）每列都有一个零元素
+//  否则的话如果某一列存在一个非零元素
+//  那么让这一列再减去一个这一列的最小值
+void PreTreatGraph(int (*graph)[MAX_SIZE])
+{
+    int minRowPos[MAX_SIZE] = {1};  //  存储每一行的最小值的位置, 初始为第一行
+
+    int minColPos[MAX_SIZE] = {1};  //  存储每一列的最小值的位置，初始化为第一列
+
+    for(int row = 1; row <= N; row++)
+    {
+        for(int col = 1; col <= N; col++)
+        {
+            // 寻找每一行的最小值
+            if(graph[row][col] < graph[minRowPos[row]])
+            {
+                    minColPos[row] = col;
+            }
+            if(graph[row][col] < graph)
+        }
+    }
 }
