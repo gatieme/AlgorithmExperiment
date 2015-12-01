@@ -141,11 +141,11 @@ bool HamiltonProcess(int (*graph)[MAX_SIZE],int depth, int hami[])
      		    {
                     if(i == N + 1)
                     {
-                        printf("=> %d\n", hami[1]);
+                        printf("%3d\n", hami[1]);
                     }
       				else
                     {
-                        printf("=> %d", hami[i]);
+                        printf("%3d -=> ", hami[i]);
      			    }
                 }
      			//printf("=> %d\n", hami[1]);
@@ -163,23 +163,23 @@ bool HamiltonProcess(int (*graph)[MAX_SIZE],int depth, int hami[])
 
 void Hamilton(int graph[][MAX_SIZE],int hami[])
 {
-    for(int start = 1; start <= N; start++)         //  循环每个顶点为起始
+    /*for(int start = 1; start <= N; start++)         //  循环每个顶点为起始
     {
         for(int i = 1; i <= N; i++) //  初始化visited位false
         {
             visited[i] = false;
         }
+    */
+    hami[1] = 1;                   //  起始的位置为S
 
-        hami[1] = start;                   //  起始的位置为S
-
-        visited[hami[1]] = true;              //  先访问起始的顶点
+    visited[hami[1]] = true;              //  先访问起始的顶点
 
 #ifdef DEBUG
-        printf("\nStart from point %d\n", hami[1]);
+    printf("\nStart from point %d\n", hami[1]);
 #endif
         //  进行深度优先搜索
-        HamiltonProcess(graph, 2, hami);
-    }
+    HamiltonProcess(graph, 2, hami);
+    //}
 }
 
 void ScanGraph(int (*graph)[MAX_SIZE])
