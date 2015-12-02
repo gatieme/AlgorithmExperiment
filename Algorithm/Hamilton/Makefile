@@ -18,6 +18,7 @@ AllHamilton : AllHamilton.o
 SimAllHamilton : SimAllHamilton.o
 	$(CC) $^ -o $@ $(LDFALGS)
 	echo "输出图中单个顶点的所有的密顿环"
+  
 
 CostSimAllHamilton : CostSimAllHamilton.o
 	$(CC) $^ -o $@ $(LDFALGS)

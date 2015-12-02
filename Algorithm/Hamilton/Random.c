@@ -12,6 +12,7 @@
 
 #define MAX_VERTEX 200
 
+
 int main()
 {
     freopen("input.txt", "w", stdout);

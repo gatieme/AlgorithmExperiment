@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
+
 
 #ifdef WINDOWS
 #include <windows.h>
@@ -134,13 +136,20 @@ double Distance(Point p1,Point p2) //p1,p2µÄ¾àÀë
     return sqrt((double)(p1.x-p2.x) * (double)(p1.x-p2.x) + (double)(p1.y-p2.y)*(double)(p1.y-p2.y));
 }
 
+bool EqualPoint(Point *left, Point *right)
+{
+    return (left->x == right->x
+         && left->y == right->y);
+}
+
 
 void InsertPoint(int pos)
 {
     int i;
     for(i = 0; i < top; i++)
     {
-        if(stack[i] == pos)
+        if(stack[i] == pos
+        && EqualPoint(&point[stack[i]], &point[pos]) == true)
         {
             break;
         }

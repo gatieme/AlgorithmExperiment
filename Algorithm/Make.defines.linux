@@ -2,7 +2,7 @@
 
 # Definitions required in all program directories to compile and link
 # C programs using gcc.
-
+  
 
 ifeq ($(DEBUG), y)
 DEFFLAGS=-DDEBUG -DLINUX
