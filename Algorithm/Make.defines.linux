@@ -12,6 +12,7 @@ endif
 
 
 CC=gcc
+CXX=g++
 COMPILE.c=$(CC) $(CFLAGS) $(CPPFLAGS) -c
 LINK.c=$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 LDFLAGS=-lm

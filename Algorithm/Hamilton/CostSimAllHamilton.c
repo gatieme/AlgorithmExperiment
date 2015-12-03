@@ -52,7 +52,7 @@ int main()
 
 #ifdef RELEASE
 	freopen("input.txt", "r", stdin);
-    freopen("allhamiltonoutput.txt", "w", stdout);
+    	freopen("costsimallhamiltonoutput.txt", "w", stdout);
 #endif
 
     while(scanf("%d", &N) != EOF) //  顶点数目N, 边数目M
@@ -261,10 +261,6 @@ void PrintGraph(int (*graph)[MAX_SIZE])
 	{
 		for(int j = 1; j <= N; j++)
 		{
-#if 0                               //  也可以使用输入矩阵的方式输入图的信息
-            scanf("%d", &a);
-            graph[i][j] = a;
-#endif
 			printf("%3d", graph[i][j]);
 		}
 		printf("\n");

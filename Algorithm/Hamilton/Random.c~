@@ -39,7 +39,7 @@ int main(void)
         {
             for(col = 0; col < vertex; col++)
             {
-                printf("%6d", graph[row][col]);
+                printf("%3d", graph[row][col]);
             }
             printf("\n");
         }
