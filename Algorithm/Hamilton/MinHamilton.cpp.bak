@@ -44,9 +44,9 @@ public:
 	int getNextNeighbor(int v,int w);//取顶点v的邻接顶点W的下一个邻接顶点
 	bool insertVertice(const T &vertex);//插入顶点
 
-	int Init( );//根据用户输入，获得图的邻接矩阵
+	int Init(istream &in);//根据用户输入，获得图的邻接矩阵
 	int RandInit();//随机初始化图(无向图)
-	int output( ); //输出图的矩阵
+	int output(ostream &out); //输出图的矩阵
 
 };
 
@@ -127,11 +127,11 @@ int Graph<T,E>::getNextNeighbor(int v,int w)//取顶点v的邻接顶点W的下�
 	return -1;//未找到
 }
  template<class T,class E>
-int Graph<T,E>::Init( )  //根据用户输入，获得图的邻接矩阵
+int Graph<T,E>::Init(istream &fin)  //根据用户输入，获得图的邻接矩阵
 {
 	int v1,v2;
 	E edge;
-	while(cin>>v1>>v2>>edge)
+	while(fin>>v1>>v2>>edge)
 	{
 		if(v1>=0&&v1<maxVertices&&v2>=0&&v2<maxVertices)
 	    {
@@ -176,23 +176,24 @@ int Graph<T,E>::RandInit()//随机初始化图(无向图)
 }
 
 template<class T,class E>
-int Graph<T,E>::output( ) //输出图的矩阵
+int Graph<T,E>::output(ostream &out) //输出图的矩阵
 {
-    cout <<"There are " <<maxVertices <<"point int this graph..." <<endl;
+    out <<"There are " <<maxVertices <<"point int this graph..." <<endl;
 	for(int i=0;i<maxVertices;i++)
 	{
 		for(int j=0;j<maxVertices;j++)
 		{
-			cout<<setw(15)<<matrix[i][j]<<"   ";
+			out<<setw(15)<<matrix[i][j]<<"   ";
 		}
-		cout<<endl;
+		out<<endl;
 	}
 	return 1;
 }
 
-//  回溯法求最短哈密顿环
+
+
 template<class T,class E>
-int sb(int start,Graph<T,E> &myGraph,ostream & cout)//simple backtracking 算法解决图的最小哈密顿回路问题  v为回路的起点和终点
+int sb(int start,Graph<T,E> &myGraph,ostream & fout)//simple backtracking 算法解决图的最小哈密顿回路问题  v为回路的起点和终点
 {
 	E minDistance=std::numeric_limits<E>::max();
 	stack<int> myStack;
@@ -251,13 +252,13 @@ int sb(int start,Graph<T,E> &myGraph,ostream & cout)//simple backtracking 算法
 							 myStack.pop();
 						 }
 
-						 cout<<"哈密顿回路 : ";
+						 fout<<"哈密顿回路 : ";
 						 E distance=0;
 						  int n=temp.top();
 						  myStack.push(n);
 						  temp.pop();
 						  int last=n;
-						   cout<<n<<"--";
+						   fout<<n<<"--";
 						 while(!temp.empty())
 						 {
 							 n=temp.top();
@@ -265,11 +266,11 @@ int sb(int start,Graph<T,E> &myGraph,ostream & cout)//simple backtracking 算法
 							 temp.pop();
 							 distance+=myGraph.getWeight(last,n);
 							 last=n;
-							 cout<<n<<"--";
+							 fout<<n<<"--";
 						 }
-						 cout<<start<<"--"<<endl;
+						 fout<<start<<"--"<<endl;
 						 distance+=myGraph.getWeight(last,start);
-						 cout<<"总长度为:"<<distance<<endl;
+						 fout<<"总长度为:"<<distance<<endl;
 						 //记录最短长度
 						 if(minDistance>distance)
 						 {
@@ -290,7 +291,7 @@ int sb(int start,Graph<T,E> &myGraph,ostream & cout)//simple backtracking 算法
 		}
 
 	}
-	cout<<"最短哈密顿回路的长度为:"<<minDistance<<endl;
+	fout<<"最短哈密顿回路的长度为:"<<minDistance<<endl;
 	return 1;
 }
 
@@ -313,7 +314,7 @@ struct NODE
 			des[i] = vertices[i];
 		}
 	}
-	bool cind(int v)
+	bool find(int v)
 	{
 		for(int i=0;i<dep;i++)
 		{
@@ -327,21 +328,20 @@ struct NODE
 
 
 template<class T,class E>
-int bb(int start,Graph<T,E> & myGraph )
+int bb(int start,Graph<T,E> & myGraph,ostream & fout)
 {
 	stack< NODE<E> > myStack;  //队列
 
 	E minDistance=std::numeric_limits<E>::max();
 
 	int s=myGraph.getFirstNeighbor(start);
-	for(s=myGraph.getNextNeighbor(start,s);s != -1;s = myGraph.getNextNeighbor(start, s))
+	for(s=myGraph.getNextNeighbor(start,s);s!=-1;s=myGraph.getNextNeighbor(start,s))
 	{
 		NODE<E> n(2);
-		n.vertices[0] = start;n.vertices[1]=s;
-		n.length = myGraph.getWeight(start, s);
+		n.vertices[0]=start;n.vertices[1]=s;
+		n.length=myGraph.getWeight(start,s);
 		myStack.push(n);
 	}
-
 	while(!myStack.empty())   //队列不为空
 	{
 		NODE<E> n=myStack.top();
@@ -352,24 +352,22 @@ int bb(int start,Graph<T,E> & myGraph )
 			int w;
 			for( w=myGraph.getFirstNeighbor(v);w!=-1;w=myGraph.getNextNeighbor(v,w))
 		    {
-				if( n.cind(w)==false)
+				if( n.find(w)==false)
 				break;
 			}
-
-            //  可以形成哈密顿环
 			if(w!=-1)
 			{
 				if(myGraph.getWeight(w,start)<std::numeric_limits<E>::max())
 				{
 					//形成回路
-					cout<<"哈密顿回路为:";
+					fout<<"哈密顿回路为:";
 					for(int i=0;i<n.dep;i++)
 					{
-						cout<<n.vertices[i]<<"   ";
+						fout<<n.vertices[i]<<"   ";
 					}
-					cout<<w<<"   "<<start<<endl;
+					fout<<w<<"   "<<start<<endl;
 					E tempDistance=n.length+myGraph.getWeight(v,w)+myGraph.getWeight(w,start);
-					cout<<"总长度为:  "<<tempDistance<<endl;
+					fout<<"总长度为:  "<<tempDistance<<endl;
 					if(minDistance>tempDistance)
 					{
 						minDistance=tempDistance;
@@ -380,24 +378,24 @@ int bb(int start,Graph<T,E> & myGraph )
 
 		for(int w=myGraph.getFirstNeighbor(v);w!=-1;w=myGraph.getNextNeighbor(v,w))
 		{
-			if(n.cind(w)==false)
+			if(n.find(w)==false)
 			{
 
-			    NODE<E> ne(n.dep+1);
-			    ne.length=n.length+myGraph.getWeight(v,w);
-			    if(ne.length<minDistance)
-			    {
-				    n.cpy(ne.vertices);
-				    ne.vertices[ne.dep-1]=w;
-				    myStack.push(ne);
-			    }
+			NODE<E> ne(n.dep+1);
+			ne.length=n.length+myGraph.getWeight(v,w);
+			if(ne.length<minDistance)
+			{
+				n.cpy(ne.vertices);
+				ne.vertices[ne.dep-1]=w;
+				myStack.push(ne);
+			}
 
 			}
 		}
 	}
 
 
-	cout<<"最短长度为  "<<minDistance<<endl;
+	fout<<"最短长度为  "<<minDistance<<endl;
 	return minDistance;
 }
 
@@ -408,17 +406,15 @@ int main(int argc, char* argv[])
 
 
     ifstream fin("input.txt");
-	ofstream fout("outputbb.txt");
-    cin.rdbuf(fin.rdbuf());
-
-    myGraph.Init( );
+	myGraph.Init(fin);
 	myGraph.RandInit();//随机初始化图
-    myGraph.output( );
-	//ofstream cout("outputsb.txt");
+    myGraph.output(cout);
+	//ofstream fout("outputsb.txt");
 
-	//sb(0,myGraph,cout);
+	//sb(0,myGraph,fout);
 
-	bb(0, myGraph);
+	ofstream fout1("outputbb.txt");
+	bb(0,myGraph,fout1);
 	return 0;
 }
 

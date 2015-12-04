@@ -34,7 +34,9 @@ class AlgorithmExperiment;
 #define CONVEX_GRAHAMSCAN_FILE  "./Algorithm/ConvexHull/GrahamScanOutput.txt"
 #define CONVEX_DIVIDE_FILE "./Algorithm/ConvexHull/DivideOutput.txt"
 
-
+#define HAMILTON_BFS_FILE  "./Algorithm/ConvexHull/BFSOutput.txt"
+#define HAMILTON_DFS_FILE  "./Algorithm/ConvexHull/GrahamScanOutput.txt"
+#define HAMILTON_CLIMBE_FILE "./Algorithm/ConvexHull/ClimbeHillOutput.txt"
 class AlgorithmExperiment : public QWidget
 {
     Q_OBJECT
@@ -54,6 +56,9 @@ private slots:
 
     //  Hamiltonian
     void slotShowHamiltonianPlot();
+    void slotShowDFSHamiltonianPlot();
+    void slotShowBFSHamiltonianPlot();
+    void slotShowClimbeHillHamiltonianPlot();
     // all plot
     void slotShowQwtPlot(int index);
 
@@ -66,15 +71,26 @@ private:
 //    QwtPlotMarker  *m_marker;
     //  暴力求解凸包
     QwtPlotCurve *m_curveConvexBrute;
-    QPen m_penConvexBrute;
+  //  QPen m_penConvexBrute;
 
     //  扫描法求解凸包
     QwtPlotCurve *m_curveConvexScan;
     //QPen m_penConvexScan;
 
     //  扫描法求解凸包
-    QwtPlotCurve *m_curveConvexDivide;
+    QwtPlotCurve *m_curveHamiltonBFS;
    // QPen m_penConvexDivide;
+
+
+    QwtPlotCurve *m_curveHamiltonDFS;
+  //  QPen m_penConvexBrute;
+
+    //  扫描法求解凸包
+    QwtPlotCurve *m_curveHamiltonClimbe;
+    //QPen m_penConvexScan;
+
+    //  扫描法求解凸包
+    QwtPlotCurve *m_curveConvexDivide;
 };
 
 #endif // ALGORITHMEXPERIMENT_H

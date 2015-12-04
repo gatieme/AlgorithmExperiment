@@ -34,11 +34,27 @@ AlgorithmExperiment::AlgorithmExperiment(QWidget *parent) :
     this->m_curveConvexScan->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
     this->m_curveConvexScan->setLegendAttribute(this->m_curveConvexScan->LegendShowLine);
 
-
     this->m_curveConvexDivide =new QwtPlotCurve("分治法");
     this->m_curveConvexDivide->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
     this->m_curveConvexDivide->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
     this->m_curveConvexDivide->setLegendAttribute(this->m_curveConvexDivide->LegendShowLine);
+
+    this->m_curveHamiltonDFS   =new QwtPlotCurve("深度优先");
+    this->m_curveHamiltonDFS->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
+    this->m_curveHamiltonDFS->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    this->m_curveHamiltonDFS->setLegendAttribute(this->m_curveHamiltonDFS->LegendShowLine);
+
+    this->m_curveHamiltonBFS =new QwtPlotCurve("广度优先");
+    this->m_curveHamiltonBFS->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
+    this->m_curveHamiltonBFS->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    this->m_curveHamiltonBFS->setLegendAttribute(this->m_curveHamiltonBFS->LegendShowLine);
+
+    this->m_curveHamiltonClimbe =new QwtPlotCurve("爬山");
+    this->m_curveHamiltonClimbe->setRenderHint(QwtPlotItem::RenderAntialiased, true);      //抗锯齿
+    this->m_curveHamiltonClimbe->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    this->m_curveHamiltonClimbe->setLegendAttribute(this->m_curveHamiltonClimbe->LegendShowLine);
+
+
 
 
 
@@ -301,5 +317,210 @@ void AlgorithmExperiment::slotShowDivideConvexHullPlot()
 
 void AlgorithmExperiment::slotShowHamiltonianPlot()
 {
+    this->slotShowBFSHamiltonianPlot();
+    this->slotShowDFSHamiltonianPlot();
+    this->slotShowClimbeHillHamiltonianPlot();
+    this->ui->qwtPlotAlgExp->replot();
+}
+
+
+void AlgorithmExperiment::slotShowDFSHamiltonianPlot()
+{
+    qDebug( ) <<"哈密顿环广度优先" <<endl;
+    QVector<double> xDivideData;
+    double  minxData = 100000000, maxxData = 0;
+    QVector<double> yDivideData;
+    double minyData = 100000000, maxyData = 0;
+    int datasize, timeuse, count;
+    xDivideData <<0;
+    yDivideData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
+
+    QFile file(HAMILTON_DFS_FILE);
+    if (file.open(QIODevice::ReadOnly) ==false)
+    {
+        qDebug() <<"打开文件失败" <<HAMILTON_DFS_FILE <<endl;
+        return ;
+    }
+    qDebug() <<"打开文件成功" <<HAMILTON_DFS_FILE <<endl;
+    QTextStream in(&file);
+    //qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
+    {
+        //qDebug() <<"读取信息" <<endl;
+        in >>datasize >>timeuse;
+        //qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        xDivideData <<datasize;
+        yDivideData <<timeuse;
+        count++;
+
+
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
+
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
+    }
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
+
+   // 设置坐标轴
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
+
+    this->m_curveHamiltonDFS->setSamples(xDivideData, yDivideData);
+    this->m_curveHamiltonDFS->attach( this->ui->qwtPlotAlgExp);
+
+    this->m_curveHamiltonDFS->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveHamiltonDFS->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::black ), QSize(5, 5) ) );
+
+}
+
+void AlgorithmExperiment::slotShowBFSHamiltonianPlot()
+{
+    qDebug( ) <<"哈密顿环广度优先" <<endl;
+    QVector<double> xDivideData;
+    double  minxData = 100000000, maxxData = 0;
+    QVector<double> yDivideData;
+    double minyData = 100000000, maxyData = 0;
+    int datasize, timeuse, count;
+    xDivideData <<0;
+    yDivideData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
+
+    QFile file(HAMILTON_BFS_FILE);
+    if (file.open(QIODevice::ReadOnly) ==false)
+    {
+        qDebug() <<"打开文件失败" <<HAMILTON_BFS_FILE <<endl;
+        return ;
+    }
+    qDebug() <<"打开文件成功" <<HAMILTON_BFS_FILE <<endl;
+    QTextStream in(&file);
+    //qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
+    {
+        //qDebug() <<"读取信息" <<endl;
+        in >>datasize >>timeuse;
+        //qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        xDivideData <<datasize;
+        yDivideData <<timeuse;
+        count++;
+
+
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
+
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
+    }
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
+
+   // 设置坐标轴
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
+
+    this->m_curveHamiltonBFS->setSamples(xDivideData, yDivideData);
+    this->m_curveHamiltonBFS->attach( this->ui->qwtPlotAlgExp);
+
+    this->m_curveHamiltonBFS->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveHamiltonBFS->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::black ), QSize(5, 5) ) );
+
+}
+
+void AlgorithmExperiment::slotShowClimbeHillHamiltonianPlot()
+{
+    qDebug( ) <<"凸包问题--分治算法ConbexHull" <<endl;
+    QVector<double> xDivideData;
+    double  minxData = 100000000, maxxData = 0;
+    QVector<double> yDivideData;
+    double minyData = 100000000, maxyData = 0;
+    int datasize, timeuse, count;
+    xDivideData <<0;
+    yDivideData <<0;
+    count = 1;
+    //this->m_marker->attach(  this->ui->qwtPlotAlgExp);
+
+    QFile file(HAMILTON_CLIMBE_FILE);
+    if (file.open(QIODevice::ReadOnly) ==false)
+    {
+        qDebug() <<"打开文件失败" <<HAMILTON_DFS_FILE <<endl;
+        return ;
+    }
+    qDebug() <<"打开文件成功" <<HAMILTON_DFS_FILE <<endl;
+    QTextStream in(&file);
+    //qDebug() <<in.atEnd() <<endl;
+    while(in.atEnd() != true)
+    {
+        //qDebug() <<"读取信息" <<endl;
+        in >>datasize >>timeuse;
+        //qDebug() <<"datesize = " <<datasize <<", timeuse = " <<timeuse <<endl;
+        xDivideData <<datasize;
+        yDivideData <<timeuse;
+        count++;
+
+
+       if(datasize< minxData)
+       {
+           minxData = datasize;
+       }
+       else if(datasize > maxxData)
+       {
+           maxxData = datasize;
+       }
+
+       if(timeuse < minyData)
+       {
+           minyData = timeuse;
+       }
+       if(timeuse > maxyData)
+       {
+           maxyData = timeuse;
+       }
+    }
+   qDebug( ) <<"水平间距 X坐标范围" <<minxData <<"--" <<maxxData <<endl;
+   qDebug( ) <<"垂直间距 Y坐标范围" <<minyData <<"--" <<maxyData <<endl;
+
+   // 设置坐标轴
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::xBottom, "数据量" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::xBottom, (int)minxData- 1, (int)maxxData + 1);
+   this->ui->qwtPlotAlgExp->setAxisTitle(QwtPlot::yLeft, "时间" );
+   this->ui->qwtPlotAlgExp->setAxisScale(QwtPlot::yLeft, (int)minyData - 1, (int)maxyData + 1);
+
+    this->m_curveHamiltonClimbe ->setSamples(xDivideData, yDivideData);
+    this->m_curveHamiltonClimbe->attach( this->ui->qwtPlotAlgExp);
+
+    this->m_curveHamiltonClimbe->setStyle( QwtPlotCurve::NoCurve );
+    this->m_curveHamiltonClimbe->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::NoBrush, QPen( Qt::black ), QSize(5, 5) ) );
 
 }

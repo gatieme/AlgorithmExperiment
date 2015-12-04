@@ -52,7 +52,7 @@ int main()
 
 #ifdef RELEASE
 	freopen("input.txt", "r", stdin);
-    	freopen("costsimallhamiltonoutput.txt", "w", stdout);
+    freopen("costsimallhamiltonoutput.txt", "w", stdout);
 #endif
 
     while(scanf("%d", &N) != EOF) //  顶点数目N, 边数目M

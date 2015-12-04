@@ -63,7 +63,7 @@ int main(void)
 
 	while(scanf("%d", &N) != EOF)
     {
-	convexCount = 0;
+    	convexCount = 0;
         for(int i = 0; i < N; i++)
         {
             scanf("%d%d",&point[i].x,&point[i].y);
@@ -181,7 +181,7 @@ void DealWithLeft(int first, int final, Point *point, Point *convex)
 {
 	int max = 0, index = -1;
 	int i = first;
-	if(first < final)  //point[first]->point[final]ÉäÏß×ó²à
+	if(first < final)                   //   point[first]->point[final]ÉäÏß×ó²à
 	{
 		for(; i < final; i++)
 		{
