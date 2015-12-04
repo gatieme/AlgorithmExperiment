@@ -3,7 +3,7 @@ PLATFORM=$(shell $(ROOT)/systype.sh)
 include $(ROOT)/Make.defines.$(PLATFORM)
 
 target=Hamilton AllHamilton SimAllHamilton  CostSimAllHamilton \
-	   BFSHamilton ClimbeHiilHamilton  MinHamilton Random
+	   BFSHamilton ClimbeHiilHamilton ClimbeHillHamilton  MinHamilton Random
 
 
 all:$(target)
@@ -34,6 +34,10 @@ BFSHamilton : BFSHamilton.o
 	echo "广度优先搜索输出图中的哈密顿环"
 
 ClimbeHiilHamilton : ClimbeHiilHamilton.o
+	$(CXX) $^ -o $@ $(LDFALGS)
+	echo "爬山法输出图中的哈密顿环"
+
+ClimbeHillHamilton : ClimbeHillHamilton.o
 	$(CXX) $^ -o $@ $(LDFALGS)
 	echo "爬山法输出图中的哈密顿环"
 

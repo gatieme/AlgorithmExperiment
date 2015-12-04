@@ -1,7 +1,0 @@
-# depslib dependency file v1.0
-1449152639 source:c:\users\administrator\desktop\算法实验\实验三：近似算法\approximationalgorithm\approximationalgorithm.c
-	<stdio.h>
-	<stdlib.h>
-	<math.h>
-	<sys/time.h>
-
