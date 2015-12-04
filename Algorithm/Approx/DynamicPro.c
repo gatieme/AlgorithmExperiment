@@ -22,9 +22,13 @@ int main()
 {
     int i;
     int num;
-
+#ifdef DEBUG
+    freopen("input.txt", "r", stdin);
+#endif
+#ifdef RELEASE
     freopen("input.txt", "r", stdin);
     freopen("DynamicProOutput.txt", "w", stdout);
+#endif
 
     if(scanf("%d", &num) != EOF)
     {
@@ -46,8 +50,14 @@ int main()
         gettimeofday( &end, NULL );
 
         int runtime = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
+#ifdef DEBUG
+        printf("\nN = %d, timeuse = %dus\n", num, runtime);
+#endif
 
-        printf("\n点数N为 : %d, 运行时间为: %d微秒\n", num, runtime);
+#ifdef RELEASE
+        printf("%5d%10d\n", num, runtime);
+#endif
+
     }
 
     return EXIT_SUCCESS;
@@ -88,8 +98,10 @@ void BoolPackSolution(int B[][MaxNode+1],int Weight[],int Value[],int num,int C)
 {
     int j = C,totalWeight = 0,totalValue = 0;
     int i,X[MaxNode+1] = {0};
-    printf("包的容量为：%d\n",C);
-    printf("\n包内各物品的重量与价值分别为：\n");
+#ifdef DEBUG
+    printf("Packeage Weoght : %d\n",C);
+    printf("\nPackage List : \n");
+#endif
     for(i = 1;i < num; i++)
     {
         if(B[i][j] == B[i + 1][j])
@@ -113,8 +125,13 @@ void BoolPackSolution(int B[][MaxNode+1],int Weight[],int Value[],int num,int C)
             totalWeight += Weight[i];
             totalValue += Value[i];
             //printf("%4d:",i);
+#ifdef DEBUG
             printf("%10d%10d\n",Weight[i],Value[i]);
+#endif
         }
     }
-    printf("\n总重量为：%d\n总价值为：%d\n",totalWeight,totalValue);
+
+#ifdef DEBUG
+    printf("\nTotal Weight = %d\nTotal Value = %d\n",totalWeight,totalValue);
+#endif
 }
