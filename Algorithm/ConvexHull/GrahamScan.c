@@ -270,7 +270,3 @@ void PrintPloygon(Point p[], int n)
         printf("%d %d\n", p[stack[i]].x, p[stack[i]].y);
     }
 }
-
-
-
-

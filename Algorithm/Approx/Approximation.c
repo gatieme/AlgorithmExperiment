@@ -11,7 +11,9 @@
 #define MaxNode 10000
 #define MAXINT 147483647
 
- //int valueApprox[MaxNode + 1] = {0};
+
+
+#define DEBUG
 //代价矩阵计算
 void ApproxBoolPacking(int Weight[],int Value[],int cost[][MaxNode+1],int C,int n);
 
@@ -21,7 +23,10 @@ void ApproxBoolPackSolution(int cost[][MaxNode+1],int Weight[],int Value[],int c
 //寻找价值量最大值
 int FindMax(int Value[],int n);
 
-int C,Weight[MaxNode+1] = {0},Value[MaxNode+1] = {0},B[MaxNode+1][MaxNode+1] = {0};
+int C;
+int Weight[MaxNode+1] = {0};
+int Value[MaxNode+1] = {0};
+int B[MaxNode+1][MaxNode+1] = {0};
 
 int main()
 {
@@ -33,9 +38,15 @@ int main()
     scanf("%lf", &epsilon);
     printf("\n");
 
+#ifdef DEBUG
+    freopen("input.txt", "r", stdin);
+    //freopen("ApproxOutput.txt", "w", stdout);
+#endif
+
+#ifdef RELEASE
     freopen("input.txt", "r", stdin);
     freopen("ApproxOutput.txt", "w", stdout);
-
+#endif
 
     int valueApprox[MaxNode + 1] = {0};
 
@@ -83,7 +94,7 @@ int main()
 
         int runtime = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
 
-        printf("\n点数N为 : %d, 运行时间为: %d微秒\n", num, runtime);
+        printf("\nN = %d, timeuse = %dus\n", num, runtime);
     }
 
     return EXIT_SUCCESS;
@@ -94,12 +105,8 @@ int main()
 void ApproxBoolPacking(int Weight[],int Value[],int cost[][MaxNode+1],int totalValue,int n)
 {
     int i,j;
-    //for(i = 1; i <= n; i++) printf("Value[%3d] = %d\n",i,Value[i]);
-    //for(i = 1; i <= n; i++) printf("Weight[%3d] = %d\n",i,Weight[i]);
-    //printf("Value[%3d] = %d\n",n,Value[n]);
     for(i = 1; i <= totalValue; i++)
     {
-        //int currentWeight = Weight[n],currentValue = Value[n];
         if(i <= Value[n])
         {
             cost[n][i] = Weight[n];
@@ -109,14 +116,10 @@ void ApproxBoolPacking(int Weight[],int Value[],int cost[][MaxNode+1],int totalV
             cost[n][i] = MAXINT;
         }
 
-        //cost[n][i] = i <= currentValue ? currentWeight : MAXINT;
-        //printf("cost[%2d][%3d] = %d\n",n,i,cost[n][i]);
     }
 
-    //for(i = 1; i <= totalValue; i++) printf("cost[%2d][%3d] = %d\n",n,i,cost[n][i]);
-    for (i = n - 1; i > 0; -- i )
+    for (i = n - 1; i > 0; --i )
     {
-        //int currentWeight = Weight[i],currentValue = Value[i];
         for ( j = 1; j <= totalValue; ++j )
         {
             if(j < Value[i])
@@ -125,22 +128,17 @@ void ApproxBoolPacking(int Weight[],int Value[],int cost[][MaxNode+1],int totalV
             }
             else
             {
-                //printf("Enter else!!");
                 if(cost[i + 1][j] < (cost[i + 1][j - Value[i]] + Weight[i]))
                 {
-                    //printf("%d<%d\n",cost[i + 1][j], cost[i + 1][j - Value[i]] + Weight[i]);
 
                     cost[i][j] = cost[i + 1][j];
                 }
                 else
                 {
-                    //printf("%d<%d\n",cost[i + 1][j], cost[i + 1][j - Value[i]] + Weight[i]);
 
                     cost[i][j] = cost[i + 1][j - Value[i]] + Weight[i];;
                 }
-                //cost[i][j] = cost[i + 1][j] < cost[i + 1][j - currentValue] + currentWeight ? cost[i + 1][j] : cost[i + 1][j - currentValue] + currentWeight;
             }
-            //printf("cost[%2d][%3d] = %d\n",i,j,cost[i][j]);
         }
     }
 }
@@ -154,8 +152,8 @@ void ApproxBoolPackSolution(int cost[][MaxNode+1],int Weight[],int value[],int c
     int totalW = 0,totalV = 0;
     //memset(X, 0, MaxNode + 1);
 
-    printf("包的容量为：%d %d\n",C, capcity);
-    printf("\n包内各物品的重量与价值分别为：\n");
+    printf("Package Weight %d %d\n", C, capcity);
+    printf("\nPackget List : \n");
 
     printf("%d", cost[1][j]);
     while ( cost[1][j] > capcity )
@@ -164,13 +162,13 @@ void ApproxBoolPackSolution(int cost[][MaxNode+1],int Weight[],int value[],int c
     }
     printf("j = %d, %d %d\n", j, cost[1][j], capcity);
 
-    //
     for ( i = 1; i < n ; ++ i )
     {
         if(j < 0)
         {
             break;
         }
+
         if ( cost[i][j] != cost[i + 1][j] )
         {
             X[i] = 1;
@@ -195,7 +193,7 @@ void ApproxBoolPackSolution(int cost[][MaxNode+1],int Weight[],int value[],int c
             printf("%10d%10d\n",Weight[i],value[i]);
         }
     }
-    printf("\n总重量为：%d\n总价值为：%d\n",totalW,totalV);
+    printf("\nTotalWeight = %d\nTotalValue = %d\n",totalW,totalV);
 }
 
 //寻找价值量最大值
